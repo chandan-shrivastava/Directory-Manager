@@ -4,12 +4,22 @@
 #include <string.h>
 #include <math.h>
 #include <stdbool.h>
-#define ll long long int
+
+typedef struct node node;
+
+struct node
+{
+    char name;//name of directory/file
+    char alias;//alias of directory/file if any
+    int type; //1 for directory 2 for file
+    struct node *child;  // points to children of this node
+    struct node *next;   // points to next node at same level
+};
 
 //Implement addition of file/directory inside current directory.
 void add()
 {
-    //Take user input for type(file/directory) and name. 
+    //Take user input for type(file/directory) and name.
 }
 
 //Change current directory to any directory by taking input the complete path to that directory.
@@ -22,7 +32,7 @@ void move()
 void alias()
 {
     //Take input the complete path to that directory and the alias.
-    //Error handling should be done for incorrect path and for already-exiting aliases. 
+    //Error handling should be done for incorrect path and for already-exiting aliases.
 }
 
 //Change the current directory to any directory by taking input the alias of that directory.
@@ -45,7 +55,7 @@ void quit()
 
 int main(void)
 {
-    ll operation;
+    int operation;
     while (1)
     {
         printf("Enter 1 to add a file/directory\n");
@@ -55,7 +65,7 @@ int main(void)
         printf("Enter 5 to find/search for a directory\n");
         printf("Enter 6 to quit\n");
 
-        scanf("%lld", &operation);
+        scanf("%d", &operation);
         switch (operation)
         {
         case 1:
