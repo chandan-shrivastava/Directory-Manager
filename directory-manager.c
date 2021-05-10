@@ -4,7 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdbool.h>
-#define MAX_LENGTH_FOR_ADDRESS 100
+#define MAX_LENGTH_FOR_ADDRESS 10000
 typedef struct node node;
 
 struct node
@@ -18,30 +18,18 @@ struct node
 
 int Flag1; //to check if there are any files or directories with their Prefix same as input Prefix-String
 
-int Compare_Prefixadd(char *a, char *b) //to check if prefix of name string of some node is equal to the input prefix-string
-{
-    for (int i = 0; i < strlen(b); i++)
-    {
-        if (a[i] != b[i]) //a is the name string and b is the prefix string
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
 // this is a recursive function which traverses all the nodes in the current directory and finds all the strings with given prefix
 void RecursiveFindadd(node *CurrentDirectory, char *Prefix)
 {
     //check for the first child node of current directory
     if (CurrentDirectory->child != NULL)
     {
-        if (Compare_Prefixadd(CurrentDirectory->child->name, Prefix)) //compares name and prefix
+        if (strcmp(CurrentDirectory->child->name, Prefix)) //compares name and prefix
         {
             Flag1 = 1; //implies that their is a Directory/File with the given prefix
         }
 
-        if (Compare_Prefixadd(CurrentDirectory->child->alias, Prefix)) //compares alias and prefix
+        if (strcmp(CurrentDirectory->child->alias, Prefix)) //compares alias and prefix
         {
             Flag1 = 1; //implies that their is a Directory/File with the given prefix
         }
@@ -53,12 +41,12 @@ void RecursiveFindadd(node *CurrentDirectory, char *Prefix)
     //check for the first next node of current directory
     if (CurrentDirectory->next != NULL)
     {
-        if (Compare_Prefixadd(CurrentDirectory->next->name, Prefix)) //compares name and prefix
+        if (strcmp(CurrentDirectory->next->name, Prefix)) //compares name and prefix
         {
             Flag1 = 1; //implies that their is a Directory/File with the given prefix
         }
 
-        if (Compare_Prefixadd(CurrentDirectory->next->alias, Prefix)) //compares alias and prefix
+        if (strcmp(CurrentDirectory->next->alias, Prefix)) //compares alias and prefix
         {
             Flag1 = 1; //implies that their is a Directory/File with the given prefix
         }
@@ -234,7 +222,7 @@ node *MOVE(node *ROOT, char *ADDRESS)
 // Implement saving directory with an alias.
 void alias(node *ROOT)
 {
-    char aliasstr[]="None";
+    char aliasstr[] = "None";
     //Take input the complete path to that directory and the alias.
     //Error handling should be done for incorrect path and for already-exiting aliases.
 L2:;
@@ -284,12 +272,12 @@ L3:
     L1:
         if (strcmp(c->name, str[no_of_word - 1]) == 0 && c->type == 1) //if satisfies conditions
         {
-            if(strcmp(c->name,"NotPossible"))
+            if (strcmp(c->name, "NotPossible"))
             {
                 printf("Cannot give alias to root\n");
                 return;
             }
-            if (strcmp(c->alias, aliasstr)!=0 && c->type == 1) //alias already exist condition
+            if (strcmp(c->alias, aliasstr) != 0 && c->type == 1) //alias already exist condition
             {
                 printf("Alias already exist\n");
                 return;
@@ -450,12 +438,13 @@ int main(void)
     int operation;
     while (1)
     {
-        printf("\nEnter 1 to add a file/directory\n");
+        printf("Current Directory/File:%s\n", current->name);
+        printf("Enter 1 to add a file/directory\n");
         printf("Enter 2 to move a directory\n");
         printf("Enter 3 to add alias to a directory\n");
         printf("Enter 4 to teleport or change path of a directory\n");
         printf("Enter 5 to find/search for a directory\n");
-        printf("Enter 6 to quit\n\n");
+        printf("Enter 6 to quit\n");
 
         scanf("%d", &operation);
         switch (operation)
@@ -481,7 +470,6 @@ int main(void)
                 current = Temp;
                 printf("You have been successfully relocaled to your desired directory/file\n");
             }
-            printf("Current Directory: %s\n", current->name);
             break;
         }
         case 3:
@@ -510,7 +498,6 @@ int main(void)
             {
                 printf("No File with Alias %s exist in the data\n", AliasName);
             }
-            printf("Current Directory/File:%s\n", current->name);
             break;
         }
         case 5:
