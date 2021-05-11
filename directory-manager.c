@@ -219,86 +219,6 @@ node *MOVE(node *ROOT, char *ADDRESS)
     }
 }
 
-// Implement saving directory with an alias.
-void alias(node *ROOT)
-{
-    char aliasstr[] = "None";
-    //Take input the complete path to that directory and the alias.
-    //Error handling should be done for incorrect path and for already-exiting aliases.
-L2:;
-    int no_of_word = 0, input = 0;
-    char str[100][100], string2[100]; //path and alias strings
-    int i = 0;                        //loop variables
-
-    printf("Enter the total number of folder/directory in the path: ");
-    scanf("%d", &no_of_word); //scan number of folder in path
-
-    printf("Enter path to the directory (seperated by spaces):\n");
-    for (i = 0; i < no_of_word; i++)
-    {
-        scanf("%s[^\n]", str[i]); //scan path seperated by spaces
-    }
-
-    node *c = malloc(sizeof(node));
-    c = ROOT;
-    int x = 0;
-L3:
-    x++;
-    if (no_of_word == x - 1) //loop termination
-    {
-        return;
-    }
-    else
-    {
-        while (c != NULL) //search every step
-        {
-            // printf("%s",c->name);
-            if (strcmp(c->name, str[i])) //search every level word by word
-            {
-                goto L1; //if found
-            }
-            c->next;
-        }
-        printf("Wrong Input. Please Enter 1 to enter a Correct Path or Press 0 to exit.\n"); //wrong path
-        scanf("%d", &input);
-        if (input == 0)
-        {
-            return; //exit
-        }
-        else
-        {
-            goto L2; //begin from start
-        }
-    L1:
-        if (strcmp(c->name, str[no_of_word - 1]) == 0 && c->type == 1) //if satisfies conditions
-        {
-            if (strcmp(c->name, "NotPossible"))
-            {
-                printf("Cannot give alias to root\n");
-                return;
-            }
-            if (strcmp(c->alias, aliasstr) != 0 && c->type == 1) //alias already exist condition
-            {
-                printf("Alias already exist\n");
-                return;
-            }
-            else //if alias doesnt exist
-            {
-                printf("Enter the alias you want to impose to the directory: ");
-                scanf("%s", string2);                                                          //scan alias
-                strcpy(c->alias, string2);                                                     //copy alias
-                printf("Alias :%s implemented to directory %s", string2, str[no_of_word - 1]); //successfully implemented
-                return;
-            }
-        }
-        else //if doesnt satisfy condition
-        {
-            c = c->child;
-            goto L3; //goto child then search at that line
-        }
-    }
-}
-
 //Change the current directory to any directory by taking input the alias of that directory.
 node *teleport(node *Root, char *Alias)
 {
@@ -328,9 +248,91 @@ node *teleport(node *Root, char *Alias)
         {
             return (Temp1);
         }
+
+        return NULL;
+    }
+}
+
+// Implement saving directory with an alias.
+void alias(node *ROOT)
+{
+    char aliasstr[] = "None";
+    //Take input the complete path to that directory and the alias.
+    //Error handling should be done for incorrect path and for already-exiting aliases.
+L2:;
+    int no_of_word = 0, input = 0;
+    char str[100][100], string2[100]; //path and alias strings
+    int i = 0;                        //loop variables
+
+    printf("Enter the total number of folder/directory in the path: ");
+    scanf("%d", &no_of_word); //scan number of folder in path
+
+    printf("Enter path to the directory (seperated by spaces):\n");
+    for (i = 0; i < no_of_word; i++)
+    {
+        scanf("%s[^\n]", str[i]); //scan path seperated by spaces
     }
 
-    return NULL;
+    node *c = malloc(sizeof(node));
+    c = ROOT->child;
+L3:
+    i=0;
+    while (c != NULL) //search every level
+    {
+        if (strcmp(c->name, str[i])) //search every level word by word
+        {
+            goto L1; //if found
+        }
+        c=c->next;
+        i++;
+    }
+    printf("Wrong Input. Please Enter 1 to enter a Correct Path or Press 0 to exit.\n"); //wrong path
+    scanf("%d", &input);
+    if (input == 0)
+    {
+        return; //exit
+    }
+    else
+    {
+        goto L2; //begin from start
+    }
+L1:
+    if (c->type == 1) //if satisfies conditions
+    {
+        if (no_of_word == 1)
+        {
+            printf("Cannot give alias to root\n");
+            return;
+        }
+        if (strcmp(c->alias, aliasstr) != 0 && c->type == 1) //alias already exist condition
+        {
+            printf("Alias already exist\n");
+            return;
+        }
+        else //if alias doesnt exist
+        {
+            printf("Enter the alias you want to impose to the directory: ");
+            scanf("%s", string2); //scan alias
+            node *Temp;
+            Temp = (node *)malloc(sizeof(struct node));
+            Temp = teleport(ROOT, string2);
+            if (Temp)
+            {
+                printf("Alias with same name already exists\n");
+            }
+            else
+            {
+                strcpy(c->alias, string2);                                                    //copy alias
+                printf("Alias :%s implemented to directory %s\n", string2, c->name); //successfully implemented
+                return;
+            }
+        }
+    }
+    else //if doesnt satisfy condition
+    {
+        c = c->child;
+        goto L3; //goto child then search at that line
+    }
 }
 
 //Implement searching all the files/directories with given prefix inside current directory.
