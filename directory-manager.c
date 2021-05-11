@@ -257,12 +257,10 @@ node *teleport(node *Root, char *Alias)
 void alias(node *ROOT)
 {
     char aliasstr[] = "None";
-    //Take input the complete path to that directory and the alias.
-    //Error handling should be done for incorrect path and for already-exiting aliases.
 L2:;
     int no_of_word = 0, input = 0;
     char str[100][100], string2[100]; //path and alias strings
-    int i = 0;                        //loop variables
+    int i = 0, j = 0;                 //loop variables
 
     printf("Enter the total number of folder/directory in the path: ");
     scanf("%d", &no_of_word); //scan number of folder in path
@@ -274,17 +272,22 @@ L2:;
     }
 
     node *c = malloc(sizeof(node));
+    node *temp2 = malloc(sizeof(node));
     c = ROOT->child;
+    i = 0;
 L3:
-    i=0;
+    j = 0;
+    i++;
     while (c != NULL) //search every level
     {
-        if (strcmp(c->name, str[i])) //search every level word by word
+        if (strcmp(c->name, str[i]) == 0) //search every level word by word
         {
             goto L1; //if found
         }
-        c=c->next;
-        i++;
+        else
+        {
+            c = c->next;
+        }
     }
     printf("Wrong Input. Please Enter 1 to enter a Correct Path or Press 0 to exit.\n"); //wrong path
     scanf("%d", &input);
@@ -296,8 +299,8 @@ L3:
     {
         goto L2; //begin from start
     }
-L1:
-    if (c->type == 1) //if satisfies conditions
+L1:;
+    if (c->type == 1 && strcmp(str[no_of_word - 1], c->name) == 0) //if satisfies conditions
     {
         if (no_of_word == 1)
         {
@@ -322,16 +325,21 @@ L1:
             }
             else
             {
-                strcpy(c->alias, string2);                                                    //copy alias
+                strcpy(c->alias, string2);                                           //copy alias
                 printf("Alias :%s implemented to directory %s\n", string2, c->name); //successfully implemented
                 return;
             }
         }
     }
-    else //if doesnt satisfy condition
+    else if (c->child != NULL)
     {
         c = c->child;
         goto L3; //goto child then search at that line
+    }
+    else
+    {
+        printf("Wrong Path\n");
+        return;
     }
 }
 
