@@ -24,12 +24,12 @@ void RecursiveFindadd(node *CurrentDirectory, char *Prefix)
     //check for the first child node of current directory
     if (CurrentDirectory->child != NULL)
     {
-        if (strcmp(CurrentDirectory->child->name, Prefix)) //compares name and prefix
+        if (!strcmp(CurrentDirectory->child->name, Prefix)) //compares name and prefix
         {
             Flag1 = 1; //implies that their is a Directory/File with the given prefix
         }
 
-        if (strcmp(CurrentDirectory->child->alias, Prefix)) //compares alias and prefix
+        if (!strcmp(CurrentDirectory->child->alias, Prefix)) //compares alias and prefix
         {
             Flag1 = 1; //implies that their is a Directory/File with the given prefix
         }
@@ -41,12 +41,12 @@ void RecursiveFindadd(node *CurrentDirectory, char *Prefix)
     //check for the first next node of current directory
     if (CurrentDirectory->next != NULL)
     {
-        if (strcmp(CurrentDirectory->next->name, Prefix)) //compares name and prefix
+        if (!strcmp(CurrentDirectory->next->name, Prefix)) //compares name and prefix
         {
             Flag1 = 1; //implies that their is a Directory/File with the given prefix
         }
 
-        if (strcmp(CurrentDirectory->next->alias, Prefix)) //compares alias and prefix
+        if (!strcmp(CurrentDirectory->next->alias, Prefix)) //compares alias and prefix
         {
             Flag1 = 1; //implies that their is a Directory/File with the given prefix
         }
@@ -85,20 +85,11 @@ void add(node *current)
     printf("Enter the name of File/Directory :");
     scanf("%s", name);
 
-    if (current->child != NULL)
+    int integer = findadd(current, name);
+    if (integer == 0)
     {
-        if (strcmp(current->child->name, name) == 0)
-        {
-            printf("Name already exist\n");
-            return;
-        }
-
-        int integer = findadd(current->child, name);
-        if (integer == 0)
-        {
-            printf("Name already exist\n");
-            return;
-        }
+        printf("Name already exist\n");
+        return;
     }
 
     strcpy(NewNode->name, name);
